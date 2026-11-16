@@ -43,6 +43,7 @@ export default function ShoppingCart({ items, onChangeQuantity, onClear, onOrder
                 <div className="carrito-producto">
                   <strong>{product.name} · Talla {product.size}</strong>
                   <span>{formatPrice(product.price)} COP por unidad</span>
+                  <span>Subtotal: {formatPrice(product.price * quantity)} COP</span>
                 </div>
                 <div className="controles-cantidad" aria-label={`Cantidad de ${product.name}, talla ${product.size}`}>
                   <button type="button" onClick={() => onChangeQuantity(product.id, -1)} aria-label={`Disminuir ${product.name}`}>−</button>
