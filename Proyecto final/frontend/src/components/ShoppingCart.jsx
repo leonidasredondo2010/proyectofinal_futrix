@@ -33,7 +33,7 @@ export default function ShoppingCart({ items, onChangeQuantity, onClear, onOrder
         <section className="carrito-panel" aria-label="Tu pedido">
           <div className="carrito-panel-cabecera">
             <h2>Tu pedido</h2>
-            <button className="boton-vaciar" type="button" onClick={onClear} disabled={!items.length}>
+            <button className="boton-vaciar" type="button" onClick={onClear} disabled={!items.length || isSubmitting}>
               Vaciar carrito
             </button>
           </div>
@@ -46,11 +46,11 @@ export default function ShoppingCart({ items, onChangeQuantity, onClear, onOrder
                   <span>Subtotal: {formatPrice(product.price * quantity)} COP</span>
                 </div>
                 <div className="controles-cantidad" aria-label={`Cantidad de ${product.name}, talla ${product.size}`}>
-                  <button type="button" onClick={() => onChangeQuantity(product.id, -1)} aria-label={`Disminuir ${product.name}`}>−</button>
+                  <button type="button" onClick={() => onChangeQuantity(product.id, -1)} disabled={isSubmitting} aria-label={`Disminuir ${product.name}`}>−</button>
                   <span>{quantity}</span>
-                  <button type="button" onClick={() => onChangeQuantity(product.id, 1)} disabled={quantity >= product.stock} aria-label={`Aumentar ${product.name}`}>+</button>
+                  <button type="button" onClick={() => onChangeQuantity(product.id, 1)} disabled={isSubmitting || quantity >= product.stock} aria-label={`Aumentar ${product.name}`}>+</button>
                 </div>
-                <button className="boton-quitar" type="button" onClick={() => onChangeQuantity(product.id, 0)}>
+                <button className="boton-quitar" type="button" onClick={() => onChangeQuantity(product.id, 0)} disabled={isSubmitting}>
                   Quitar
                 </button>
               </article>
