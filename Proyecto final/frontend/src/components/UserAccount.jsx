@@ -27,6 +27,17 @@ export default function UserAccount({ user, onUserChange, isDialogOpen, onDialog
     };
   }, [onUserChange]);
 
+  useEffect(() => {
+    if (!isDialogOpen) return undefined;
+
+    function closeOnEscape(event) {
+      if (event.key === "Escape") onDialogOpenChange(false);
+    }
+
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [isDialogOpen, onDialogOpenChange]);
+
   async function submitAccount(event) {
     event.preventDefault();
     setIsSubmitting(true);
