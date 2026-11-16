@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getCurrentUser, loginUser, logoutUser, registerUser } from "../services/api";
 
 export default function UserAccount({ user, onUserChange, isDialogOpen, onDialogOpenChange }) {
@@ -8,6 +8,8 @@ export default function UserAccount({ user, onUserChange, isDialogOpen, onDialog
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [status, setStatus] = useState("");
+  const dialogRef = useRef(null);
+  const openerRef = useRef(null);
 
   useEffect(() => {
     let isActive = true;
@@ -30,6 +32,7 @@ export default function UserAccount({ user, onUserChange, isDialogOpen, onDialog
   useEffect(() => {
     if (!isDialogOpen) return undefined;
 
+    dialogRef.current?.querySelector("input")?.focus();
     function closeOnEscape(event) {
       if (event.key === "Escape") onDialogOpenChange(false);
     }
@@ -37,6 +40,12 @@ export default function UserAccount({ user, onUserChange, isDialogOpen, onDialog
     document.addEventListener("keydown", closeOnEscape);
     return () => document.removeEventListener("keydown", closeOnEscape);
   }, [isDialogOpen, onDialogOpenChange]);
+
+  useEffect(() => {
+    if (isDialogOpen) return;
+    openerRef.current?.focus();
+    openerRef.current = null;
+  }, [isDialogOpen]);
 
   async function submitAccount(event) {
     event.preventDefault();
@@ -79,6 +88,7 @@ export default function UserAccount({ user, onUserChange, isDialogOpen, onDialog
   function openDialog() {
     setMode("login");
     setStatus("");
+    openerRef.current = document.activeElement;
     onDialogOpenChange(true);
   }
 
@@ -96,7 +106,7 @@ export default function UserAccount({ user, onUserChange, isDialogOpen, onDialog
       {status && !isDialogOpen && <span className="cuenta-estado" role="status">{status}</span>}
       {isDialogOpen && createPortal(
         <div className="cuenta-overlay">
-          <section className="cuenta-dialogo" role="dialog" aria-modal="true" aria-labelledby="cuenta-titulo">
+          <section className="cuenta-dialogo" ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="cuenta-titulo">
             <button
               className="cuenta-cerrar"
               type="button"
