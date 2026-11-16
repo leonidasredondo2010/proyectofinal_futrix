@@ -14,14 +14,16 @@ export default function ShoppingCart({ items, onChangeQuantity, onClear, onOrder
     event.preventDefault();
     if (!items.length || isSubmitting) return;
 
-    const data = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const data = new FormData(form);
     setIsSubmitting(true);
     try {
-      await onOrder({
+      const saved = await onOrder({
         name: data.get("nombre"),
         phone: data.get("telefono"),
         email: data.get("correo"),
       });
+      if (saved) form.reset();
     } finally {
       setIsSubmitting(false);
     }
