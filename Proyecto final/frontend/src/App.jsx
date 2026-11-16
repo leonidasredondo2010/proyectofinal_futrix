@@ -175,7 +175,8 @@ function App() {
   async function submitContact(event) {
     event.preventDefault();
     if (isContactSubmitting) return;
-    const data = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const data = new FormData(form);
     const contact = {
       name: data.get("nombre"),
       phone: data.get("telefono"),
@@ -205,6 +206,7 @@ function App() {
       setIsContactSubmitting(false);
     }
 
+    form.reset();
     setContactStatus("Mensaje guardado. Puedes revisar el mensaje de WhatsApp y confirmar el envío.");
     if (whatsappWindow) whatsappWindow.location.href = whatsappUrl;
     setContactWhatsAppLink(whatsappUrl);
