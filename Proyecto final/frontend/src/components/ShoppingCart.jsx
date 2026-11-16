@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { formatPrice } from "../../../shared/catalog.js";
 import { useCloseOnOutside } from "../hooks/useCloseOnOutside";
 
-export default function ShoppingCart({ items, onChangeQuantity, onClear, onOrder, status, whatsappLink, isOpen, onToggle, onClose, isAuthenticated, onRequireLogin }) {
+export default function ShoppingCart({ items, onChangeQuantity, onClear, onOrder, status, whatsappLink, isOpen, onToggle, onClose, isAuthenticated, customer, onRequireLogin }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const cartRef = useRef(null);
   useCloseOnOutside(cartRef, isOpen, onClose);
@@ -71,7 +71,7 @@ export default function ShoppingCart({ items, onChangeQuantity, onClear, onOrder
               <h3>Datos para tu pedido</h3>
               <label>
                 Nombre completo
-                <input name="nombre" autoComplete="name" minLength="2" maxLength="100" required disabled={!items.length || isSubmitting} />
+                <input name="nombre" autoComplete="name" minLength="2" maxLength="100" defaultValue={customer?.name || ""} required disabled={!items.length || isSubmitting} />
               </label>
               <label>
                 WhatsApp de contacto
@@ -79,7 +79,7 @@ export default function ShoppingCart({ items, onChangeQuantity, onClear, onOrder
               </label>
               <label>
                 Correo electrónico <span>(opcional)</span>
-                <input name="correo" type="email" autoComplete="email" maxLength="254" disabled={!items.length || isSubmitting} />
+                <input name="correo" type="email" autoComplete="email" maxLength="254" defaultValue={customer?.email || ""} disabled={!items.length || isSubmitting} />
               </label>
               <button className="boton" type="submit" disabled={!items.length || isSubmitting}>
                 {isSubmitting ? "Enviando..." : "Continuar por WhatsApp"}

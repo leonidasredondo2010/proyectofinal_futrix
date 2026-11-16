@@ -436,6 +436,7 @@ function App() {
         onToggle={() => setIsCartOpen((open) => !open)}
         onClose={() => setIsCartOpen(false)}
         isAuthenticated={Boolean(currentUser)}
+        customer={currentUser}
         onRequireLogin={() => setIsAccountDialogOpen(true)}
       />
       <ChatWidget />
