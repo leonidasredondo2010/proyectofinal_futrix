@@ -1,13 +1,16 @@
+const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/+$/, "");
+
 async function postJson(path, data) {
   let response;
   try {
-    response = await fetch(path, {
+    response = await fetch(`${apiBaseUrl}${path}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
+      credentials: "include",
     });
   } catch {
-    throw new Error("No se pudo contactar con la API local. Comprueba que el servidor esté iniciado.");
+    throw new Error("No se pudo contactar con la API. Comprueba tu conexión e inténtalo de nuevo.");
   }
 
   const result = await response.json().catch(() => ({}));
@@ -20,15 +23,16 @@ async function postJson(path, data) {
 async function getJson(path, token) {
   let response;
   try {
-    response = await fetch(path, {
+    response = await fetch(`${apiBaseUrl}${path}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
+      credentials: "include",
     });
   } catch {
-    throw new Error("No se pudo contactar con la API local. Comprueba que el servidor esté iniciado.");
+    throw new Error("No se pudo contactar con la API. Comprueba tu conexión e inténtalo de nuevo.");
   }
 
   const result = await response.json().catch(() => ({}));

@@ -1,0 +1,56 @@
+name: Deploy frontend to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Proyecto final/frontend/**"
+      - "Proyecto final/shared/**"
+      - "Proyecto final/vite.config.js"
+      - "Proyecto final/package.json"
+      - "Proyecto final/package-lock.json"
+      - ".github/workflows/deploy-frontend.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.12.0
+          cache: npm
+          cache-dependency-path: "Proyecto final/package-lock.json"
+      - name: Install dependencies
+        run: npm ci
+        working-directory: "Proyecto final"
+      - name: Build frontend
+        run: npm run build
+        working-directory: "Proyecto final"
+        env:
+          GITHUB_PAGES: "true"
+          VITE_API_BASE_URL: https://proyectofinal-futrix.onrender.com
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "Proyecto final/dist"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

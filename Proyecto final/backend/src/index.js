@@ -1,8 +1,6 @@
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
 import ordersRouter from "./routes/orders.js";
 import contactsRouter from "./routes/contacts.js";
 import adminRouter from "./routes/admin.js";
@@ -12,9 +10,27 @@ import { connectToDatabase } from "./database/connection.js";
 
 const app = express();
 const port = Number(process.env.PORT) || 3001;
-const distDirectory = fileURLToPath(new URL("../../dist/", import.meta.url));
+const allowedOrigins = new Set([
+  process.env.FRONTEND_ORIGIN,
+  ...(process.env.NODE_ENV === "production"
+    ? []
+    : ["http://localhost:5173", "http://127.0.0.1:5173"]),
+].filter(Boolean));
 
 app.disable("x-powered-by");
+app.use((request, response, next) => {
+  const origin = request.get("Origin");
+  if (!origin || !allowedOrigins.has(origin)) return next();
+
+  response.setHeader("Access-Control-Allow-Origin", origin);
+  response.setHeader("Access-Control-Allow-Credentials", "true");
+  response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  response.setHeader("Vary", "Origin");
+
+  if (request.method === "OPTIONS") return response.sendStatus(204);
+  return next();
+});
 app.use(express.json({ limit: "16kb" }));
 
 app.get(
@@ -31,13 +47,6 @@ app.use("/api/auth", authRouter);
 
 app.use("/api", (_request, _response, next) => {
   next(new ApiError(404, "La ruta solicitada no existe."));
-});
-
-app.use(express.static(distDirectory));
-app.get(/.*/, (_request, response, next) => {
-  response.sendFile(path.join(distDirectory, "index.html"), (error) => {
-    if (error) next(error);
-  });
 });
 
 app.use((error, _request, response, _next) => {

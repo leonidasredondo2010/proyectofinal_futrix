@@ -30,17 +30,19 @@ function getSessionToken(request) {
 
 function setSessionCookie(response, token) {
   const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
+  const sameSite = process.env.NODE_ENV === "production" ? "None" : "Lax";
   response.setHeader(
     "Set-Cookie",
-    `${sessionCookieName}=${token}; Max-Age=${sessionMaxAgeSeconds}; Path=/; HttpOnly; SameSite=Lax${secure}`,
+    `${sessionCookieName}=${token}; Max-Age=${sessionMaxAgeSeconds}; Path=/; HttpOnly; SameSite=${sameSite}${secure}`,
   );
 }
 
 function clearSessionCookie(response) {
   const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
+  const sameSite = process.env.NODE_ENV === "production" ? "None" : "Lax";
   response.setHeader(
     "Set-Cookie",
-    `${sessionCookieName}=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax${secure}`,
+    `${sessionCookieName}=; Max-Age=0; Path=/; HttpOnly; SameSite=${sameSite}${secure}`,
   );
 }
 

@@ -1,6 +1,6 @@
 # Futrix
 
-Tienda de guantes de fútbol con React, Vite, una API Express y MongoDB local.
+Tienda de guantes de fútbol con React, Vite, una API Express y MongoDB.
 
 ## Requisitos
 
@@ -25,16 +25,16 @@ En Compass, conecta a `mongodb://127.0.0.1:27017`. La base `futrix` y sus colecc
 Para comprar, el cliente debe iniciar sesión, agregar guantes al carrito y completar sus datos de contacto. La API también valida la sesión antes de guardar cada pedido, que queda asociado a la cuenta; después se abre WhatsApp para confirmar el envío.
 Los visitantes también pueden crear una cuenta e iniciar sesión desde el encabezado. Los datos se guardan en la colección `users`; las contraseñas se almacenan cifradas con scrypt y las sesiones se gestionan desde la colección `sessions`.
 
-## Despliegue público en Render
+## Despliegue
 
-El archivo `render.yaml` configura un servicio web de Render para compilar el frontend y servirlo junto con la API Express. Antes de desplegar:
+El frontend se publica en GitHub Pages y la API en Render. El archivo `render.yaml` configura Render como un servicio de API; el workflow `.github/workflows/deploy-frontend.yml` construye y publica el frontend.
 
-1. Crea una base de datos en MongoDB Atlas y copia su URI de conexión.
-2. En Render, crea un Blueprint desde este repositorio y confirma la carpeta raíz `Proyecto final`.
-3. Ingresa `MONGODB_URI`, `ADMIN_USERNAME`, `ADMIN_PASSWORD` y `ADMIN_TOKEN` como variables secretas del servicio. Usa credenciales seguras y no las guardes en GitHub.
-4. Render compilará con `npm install && npm run build` e iniciará el servicio con `npm start`.
+1. En Render, usa la carpeta raíz `Proyecto final`, `npm ci` como comando de compilación y `npm start` como comando de inicio.
+2. Configura `MONGODB_URI`, `ADMIN_USERNAME`, `ADMIN_PASSWORD` y `ADMIN_TOKEN` como variables secretas de Render. No las guardes en GitHub.
+3. En GitHub, habilita Pages con la opción **GitHub Actions**. El workflow publica automáticamente cada cambio en `main`.
+4. El frontend usa la API `https://proyectofinal-futrix.onrender.com`; Render permite el origen de GitHub Pages configurado en `FRONTEND_ORIGIN`.
 
-Render asigna el puerto del servicio automáticamente. La API escucha en todas las interfaces y el panel administrativo no acepta las credenciales de desarrollo cuando `NODE_ENV=production`.
+Render asigna el puerto automáticamente y la API escucha en todas las interfaces. Las sesiones requieren cookies de terceros; algunos navegadores pueden bloquearlas entre GitHub Pages y Render.
 
 ## Producción local
 
@@ -43,7 +43,7 @@ npm run build
 npm start
 ```
 
-Express sirve el build y la API desde el puerto `3001` (o desde el puerto configurado en `.env`). Para una publicación pública hace falta un servidor accesible desde internet; la base de datos configurada aquí escucha solo en la computadora local.
+Express sirve la API desde el puerto `3001` (o desde el puerto configurado en `.env`). Para previsualizar el frontend compilado, ejecuta `npm run preview`.
 
 ## Estructura
 
