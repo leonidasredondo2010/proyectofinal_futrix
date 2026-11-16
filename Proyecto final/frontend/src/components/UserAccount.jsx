@@ -6,6 +6,7 @@ export default function UserAccount({ user, onUserChange, isDialogOpen, onDialog
   const [mode, setMode] = useState("login");
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const [status, setStatus] = useState("");
 
   useEffect(() => {
@@ -52,12 +53,15 @@ export default function UserAccount({ user, onUserChange, isDialogOpen, onDialog
 
   async function signOut() {
     setStatus("");
+    setIsSigningOut(true);
     try {
       await logoutUser();
       onUserChange(null);
       setStatus("Sesión cerrada.");
     } catch (error) {
       setStatus(error.message);
+    } finally {
+      setIsSigningOut(false);
     }
   }
 
@@ -70,8 +74,8 @@ export default function UserAccount({ user, onUserChange, isDialogOpen, onDialog
   return (
     <div className="cuenta-control">
       {user ? (
-        <button className="cuenta-boton cuenta-secundario" type="button" onClick={signOut}>
-          Cerrar sesión
+        <button className="cuenta-boton cuenta-secundario" type="button" onClick={signOut} disabled={isSigningOut}>
+          {isSigningOut ? "Cerrando sesión..." : "Cerrar sesión"}
         </button>
       ) : (
         <button className="cuenta-boton" type="button" onClick={openDialog} disabled={isLoading}>
