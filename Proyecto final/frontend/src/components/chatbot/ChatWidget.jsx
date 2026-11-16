@@ -8,6 +8,11 @@ const quickQuestions = [
   "¿Cómo puedo realizar un pedido?",
 ];
 
+const initialGreeting = {
+  type: "bot",
+  text: "¡Hola! Puedo ayudarte con tallas, precios y pedidos. ¿Qué te gustaría saber?",
+};
+
 function getReply(question) {
   const text = question.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   const size = text.match(/\b(5|6|7|8)\b/)?.[1];
@@ -80,9 +85,7 @@ function getReply(question) {
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [question, setQuestion] = useState("");
-  const [messages, setMessages] = useState([
-    { type: "bot", text: "¡Hola! Puedo ayudarte con tallas, precios y pedidos. ¿Qué te gustaría saber?" },
-  ]);
+  const [messages, setMessages] = useState([initialGreeting]);
   const chatRef = useRef(null);
   useCloseOnOutside(chatRef, isOpen, () => setIsOpen(false));
 
@@ -112,7 +115,7 @@ export default function ChatWidget() {
               className="chatbot-limpiar"
               type="button"
               onClick={() => {
-                setMessages([]);
+                setMessages([initialGreeting]);
                 setQuestion("");
               }}
             >
