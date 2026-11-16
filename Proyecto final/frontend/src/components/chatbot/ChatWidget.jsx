@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { formatPrice, pricesBySize } from "../../../../shared/catalog.js";
 import { useCloseOnOutside } from "../../hooks/useCloseOnOutside";
+import { sitePath } from "../../utils/sitePath";
 
 const quickQuestions = [
   "¿Qué tallas de guantes se encuentran disponibles?",
@@ -21,12 +22,12 @@ function getReply(question) {
     if (matches) answers.push(answer);
   };
   const sizeLink = size
-    ? { href: `/?talla=${size}#catalogo`, label: `Ver guantes talla ${size}` }
-    : { href: "/#tallas", label: "Ver tallas y modelos" };
+    ? { href: sitePath(`?talla=${size}#catalogo`), label: `Ver guantes talla ${size}` }
+    : { href: sitePath("#tallas"), label: "Ver tallas y modelos" };
 
   add(/\b(quienes somos|quienes son|quien es futrix|que es futrix|sobre futrix|historia de futrix|emprendimiento|negocio)\b/.test(text), {
     text: "Futrix es un emprendimiento dedicado a ofrecer guantes de fútbol para niños y jóvenes. Queremos que cada portero juegue con confianza y se sienta seguro bajo los tres palos.",
-    link: { href: "/#nosotros", label: "Conocer más sobre Futrix" },
+    link: { href: sitePath("#nosotros"), label: "Conocer más sobre Futrix" },
   });
   add(/\b(que venden|que vende|que productos|que ofrecen|que tipos|venden|producto|productos|tipo|tipos|modelo|modelos|referencia|fotos|imagenes)\b/.test(text), {
     text: "Vendemos guantes de portero Golty. Hay 12 referencias disponibles y puedes ver sus fotos en las tallas 5, 6, 7 y 8.",
@@ -34,7 +35,7 @@ function getReply(question) {
   });
   add(/\b(para quien|para quienes|ninos|ninas|jovenes|porteros|porteras|edad)\b/.test(text), {
     text: "La tienda está pensada para niños y jóvenes que juegan de portero y quieren sentirse seguros en la cancha.",
-    link: { href: "/#nosotros", label: "Conocer Futrix" },
+    link: { href: sitePath("#nosotros"), label: "Conocer Futrix" },
   });
   if (/\b(precio|precios|cuesta|cuestan|valor|valen|cobran|cuanto cuesta|cuanto cuestan|cuanto vale|cuanto valen|cuanto es)\b/.test(text)) {
     add(true, size
@@ -44,18 +45,18 @@ function getReply(question) {
         }
       : {
           text: `Los precios son: talla 5, ${formatPrice(pricesBySize[5])}; talla 6, ${formatPrice(pricesBySize[6])}; talla 7, ${formatPrice(pricesBySize[7])}; y talla 8, ${formatPrice(pricesBySize[8])} COP.`,
-          link: { href: "/#tallas", label: "Elegir una talla" },
+          link: { href: sitePath("#tallas"), label: "Elegir una talla" },
         });
   }
   add(/\b(talla|tallas|medir|medida|guia|mano|palma|ajuste|queda|quede)\b/.test(text), {
     text: "Tenemos tallas 5, 6, 7 y 8. Para elegir, mide alrededor de la palma justo debajo de los nudillos, sin incluir el pulgar; consulta también la guía del fabricante, porque las medidas pueden variar según el modelo. El guante debe quedar firme y permitir mover los dedos con comodidad.",
     link: size
       ? sizeLink
-      : { href: "/#guia", label: "Consultar guía de tallas" },
+      : { href: sitePath("#guia"), label: "Consultar guía de tallas" },
   });
   add(/\b(cuidar|cuidado|limpiar|limpieza|lavar|secar|guardar|conservar)\b/.test(text), {
     text: "Para cuidar tus guantes, sigue las indicaciones de limpieza del fabricante, déjalos secar al aire sin calor directo ni sol intenso y guárdalos secos en un lugar limpio y ventilado.",
-    link: { href: "/#cuidados", label: "Ver consejos de cuidado" },
+    link: { href: sitePath("#cuidados"), label: "Ver consejos de cuidado" },
   });
   add(/\b(pedido|pedir|comprar|compra|whatsapp|pago|envio|entrega|domicilio)\b/.test(text), {
     text: "Para hacer un pedido, elige una talla, agrega los guantes al carrito y pulsa «Pedir por WhatsApp». Se abrirá un mensaje con tu pedido para que lo revises y confirmes el envío.",

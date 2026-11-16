@@ -1,11 +1,12 @@
 import { formatPrice } from "../../../shared/catalog.js";
+import { sitePath } from "../utils/sitePath";
 
 export default function ProductCatalog({ size, products, onSelectImage, onAdd, onBackToSizes }) {
   return (
     <section className="catalogo" id="catalogo">
       <a
         className="volver-inicio-flecha"
-        href="/#tallas"
+        href={sitePath("#tallas")}
         aria-label="Volver a la sección de tallas"
         title="Volver a las tallas"
         onClick={(event) => {
@@ -15,7 +16,7 @@ export default function ProductCatalog({ size, products, onSelectImage, onAdd, o
       >
         <span aria-hidden="true">←</span>
       </a>
-      <a className="volver-inicio-texto" href="/#inicio">Volver al inicio</a>
+      <a className="volver-inicio-texto" href={sitePath("#inicio")}>Volver al inicio</a>
       <p className="etiqueta">Colección para porteros</p>
       <h2>Guantes Golty - Talla {size}</h2>
       <div className="productos">
@@ -29,7 +30,7 @@ export default function ProductCatalog({ size, products, onSelectImage, onAdd, o
             >
               <img
                 className="producto-imagen"
-                src={product.image}
+                src={sitePath(product.image)}
                 alt={`Guantes ${product.name}, talla ${product.size}`}
                 loading="lazy"
               />

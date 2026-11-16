@@ -5,6 +5,7 @@ import ImageViewer from "./components/ImageViewer";
 import ProductCatalog from "./components/ProductCatalog";
 import ShoppingCart from "./components/ShoppingCart";
 import UserAccount from "./components/UserAccount";
+import { sitePath } from "./utils/sitePath";
 import { availableSizes, formatPrice, pricesBySize, products } from "../../shared/catalog.js";
 import { saveContact, saveOrder } from "./services/api";
 import "./App.css";
@@ -77,7 +78,7 @@ function App() {
   }, []);
 
   function returnToSizes() {
-    window.history.pushState(null, "", "/#tallas");
+    window.history.pushState(null, "", sitePath("#tallas"));
     setSelectedSize(null);
     setSectionToScroll("tallas");
   }
@@ -215,17 +216,17 @@ function App() {
   return (
     <div className={`app-shell${selectedSize ? " vista-catalogo" : ""}`}>
       <header className="encabezado">
-        <a className="marca" href="/">
-          <img className="marca-icono" src="/futrix-logo.svg" alt="" />
+        <a className="marca" href={sitePath()}>
+          <img className="marca-icono" src={sitePath("futrix-logo.svg")} alt="" />
           <span className="marca-nombre">Futrix<span>.</span></span>
         </a>
         <nav aria-label="Navegación principal">
-          <a href="/#inicio">Inicio</a>
-          <a href="/#tallas">Tallas</a>
-          <a href="/#guia">Guía de tallas</a>
-          <a href="/#cuidados">Cuidados</a>
-          <a href="/#preguntas">Preguntas frecuentes</a>
-          <a href="/#nosotros">Sobre Futrix</a>
+          <a href={sitePath("#inicio")}>Inicio</a>
+          <a href={sitePath("#tallas")}>Tallas</a>
+          <a href={sitePath("#guia")}>Guía de tallas</a>
+          <a href={sitePath("#cuidados")}>Cuidados</a>
+          <a href={sitePath("#preguntas")}>Preguntas frecuentes</a>
+          <a href={sitePath("#nosotros")}>Sobre Futrix</a>
         </nav>
         <UserAccount
           user={currentUser}
@@ -259,7 +260,7 @@ function App() {
               <h2>Guantes por talla</h2>
               <div className="tarjetas">
                 {availableSizes.map((size) => (
-                  <a className="tarjeta tarjeta-talla" href={`/?talla=${size}#catalogo`} key={size}>
+                  <a className="tarjeta tarjeta-talla" href={sitePath(`?talla=${size}#catalogo`)} key={size}>
                     <span className="icono" aria-hidden="true">🧤</span>
                     <p className="numero-talla">Talla {size}</p>
                     <h3>Guantes Golty</h3>
@@ -352,12 +353,12 @@ function App() {
                 <div className="nosotros-visual">
                   <img
                     className="nosotros-guantes"
-                    src="/imagenes-guantes/guante-01.jpeg"
+                    src={sitePath("imagenes-guantes/guante-01.jpeg")}
                     alt="Guantes de portero Golty disponibles en Futrix"
                     loading="lazy"
                   />
                   <div className="nosotros-insignia">
-                    <img src="/futrix-logo.svg" alt="" />
+                    <img src={sitePath("futrix-logo.svg")} alt="" />
                     <span>Confianza en cada atajada</span>
                   </div>
                 </div>
@@ -411,19 +412,19 @@ function App() {
         <footer className="pie">
           <div className="pie-contenido">
             <div className="pie-marca">
-              <a className="marca" href="/">
-                <img className="marca-icono" src="/futrix-logo.svg" alt="" />
+              <a className="marca" href={sitePath()}>
+                <img className="marca-icono" src={sitePath("futrix-logo.svg")} alt="" />
                 <span className="marca-nombre">Futrix<span>.</span></span>
               </a>
               <p>Confianza y seguridad para defender cada balón.</p>
             </div>
             <nav className="pie-enlaces" aria-label="Enlaces del pie de página y redes sociales">
-              <a href="/#tallas">Ver tallas</a>
-              <a href="/#guia">Guía de tallas</a>
-              <a href="/#cuidados">Cuidados</a>
-              <a href="/#preguntas">Preguntas frecuentes</a>
-              <a href="/#nosotros">Sobre Futrix</a>
-              <a href="/#inicio">Volver arriba</a>
+              <a href={sitePath("#tallas")}>Ver tallas</a>
+              <a href={sitePath("#guia")}>Guía de tallas</a>
+              <a href={sitePath("#cuidados")}>Cuidados</a>
+              <a href={sitePath("#preguntas")}>Preguntas frecuentes</a>
+              <a href={sitePath("#nosotros")}>Sobre Futrix</a>
+              <a href={sitePath("#inicio")}>Volver arriba</a>
               <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer">WhatsApp: 300 222 1220</a>
               <a href="https://www.tiktok.com/@leonidasrdqrz?_r=1&amp;_t=ZS-9ARPBqaKVPh" target="_blank" rel="noopener noreferrer">TikTok</a>
             </nav>

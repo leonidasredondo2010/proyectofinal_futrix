@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { sitePath } from "../utils/sitePath";
 
 export default function ImageViewer({ product, onClose }) {
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function ImageViewer({ product, onClose }) {
           Cerrar
         </button>
         <img
-          src={product.image}
+          src={sitePath(product.image)}
           alt={`Guantes ${product.name}, talla ${product.size}`}
         />
         <p>{product.name} · Talla {product.size}</p>
