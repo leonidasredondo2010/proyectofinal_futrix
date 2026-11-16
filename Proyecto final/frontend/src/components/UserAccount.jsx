@@ -18,7 +18,7 @@ export default function UserAccount({ user, onUserChange, isDialogOpen, onDialog
         if (isActive) onUserChange(currentUser);
       })
       .catch((error) => {
-        if (isActive) setStatus(error.message);
+        if (isActive) console.error("No se pudo comprobar la sesión actual:", error);
       })
       .finally(() => {
         if (isActive) setIsLoading(false);
