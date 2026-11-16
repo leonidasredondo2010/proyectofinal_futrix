@@ -40,7 +40,7 @@ router.post(
       }
 
       const product = productsById.get(item.productId);
-      if (!product || item.quantity < 1 || item.quantity > 50 || seenProducts.has(item.productId)) {
+      if (!product || item.quantity < 1 || item.quantity > product.stock || seenProducts.has(item.productId)) {
         throw new ApiError(400, "El pedido contiene un producto o una cantidad no válida.");
       }
       seenProducts.add(item.productId);

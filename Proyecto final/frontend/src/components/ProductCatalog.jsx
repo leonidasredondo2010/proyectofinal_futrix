@@ -41,8 +41,8 @@ export default function ProductCatalog({ size, products, onSelectImage, onAdd, o
               <p>Talla {product.size}</p>
               <p>Unidades disponibles: {product.stock}</p>
               <p className="producto-precio">{formatPrice(product.price)} COP</p>
-              <button className="boton" type="button" onClick={() => onAdd(product.id)}>
-                Agregar al carrito
+              <button className="boton" type="button" onClick={() => onAdd(product.id)} disabled={product.stock < 1}>
+                {product.stock > 0 ? "Agregar al carrito" : "Agotado"}
               </button>
             </div>
           </article>

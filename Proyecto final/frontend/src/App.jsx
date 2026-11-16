@@ -29,11 +29,13 @@ function readSavedCart() {
   try {
     const savedCart = JSON.parse(localStorage.getItem("futrix-carrito") || "{}");
     return Object.fromEntries(
-      Object.entries(savedCart).filter(([id, quantity]) =>
-        products.some((product) => product.id === id)
-        && Number.isInteger(Number(quantity))
-        && Number(quantity) > 0,
-      ).map(([id, quantity]) => [id, Number(quantity)]),
+      Object.entries(savedCart).flatMap(([id, quantity]) => {
+        const product = products.find((item) => item.id === id);
+        const parsedQuantity = Number(quantity);
+        return product && Number.isInteger(parsedQuantity) && parsedQuantity > 0
+          ? [[id, Math.min(parsedQuantity, product.stock)]]
+          : [];
+      }),
     );
   } catch {
     return {};
@@ -89,6 +91,14 @@ function App() {
   }
 
   function addToCart(productId) {
+    const product = products.find((item) => item.id === productId);
+    if (!product) return;
+    if ((cart[productId] || 0) >= product.stock) {
+      setCartStatus(`Solo hay ${product.stock} unidades disponibles de esta referencia.`);
+      setIsCartOpen(true);
+      return;
+    }
+
     updateCart({ ...cart, [productId]: (cart[productId] || 0) + 1 });
     setCartStatus("");
     setCartWhatsAppLink("");
@@ -96,7 +106,9 @@ function App() {
   }
 
   function changeQuantity(productId, amount) {
-    const quantity = amount === 0 ? 0 : (cart[productId] || 0) + amount;
+    const product = products.find((item) => item.id === productId);
+    if (!product) return;
+    const quantity = amount === 0 ? 0 : Math.min(product.stock, (cart[productId] || 0) + amount);
     const nextCart = { ...cart };
     if (quantity > 0) nextCart[productId] = quantity;
     else delete nextCart[productId];

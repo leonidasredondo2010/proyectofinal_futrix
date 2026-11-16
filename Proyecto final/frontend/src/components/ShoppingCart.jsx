@@ -47,7 +47,7 @@ export default function ShoppingCart({ items, onChangeQuantity, onClear, onOrder
                 <div className="controles-cantidad" aria-label={`Cantidad de ${product.name}, talla ${product.size}`}>
                   <button type="button" onClick={() => onChangeQuantity(product.id, -1)} aria-label={`Disminuir ${product.name}`}>−</button>
                   <span>{quantity}</span>
-                  <button type="button" onClick={() => onChangeQuantity(product.id, 1)} aria-label={`Aumentar ${product.name}`}>+</button>
+                  <button type="button" onClick={() => onChangeQuantity(product.id, 1)} disabled={quantity >= product.stock} aria-label={`Aumentar ${product.name}`}>+</button>
                 </div>
                 <button className="boton-quitar" type="button" onClick={() => onChangeQuantity(product.id, 0)}>
                   Quitar
