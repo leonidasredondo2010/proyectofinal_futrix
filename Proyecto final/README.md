@@ -25,6 +25,17 @@ En Compass, conecta a `mongodb://127.0.0.1:27017`. La base `futrix` y sus colecc
 Para comprar, el cliente debe iniciar sesión, agregar guantes al carrito y completar sus datos de contacto. La API también valida la sesión antes de guardar cada pedido, que queda asociado a la cuenta; después se abre WhatsApp para confirmar el envío.
 Los visitantes también pueden crear una cuenta e iniciar sesión desde el encabezado. Los datos se guardan en la colección `users`; las contraseñas se almacenan cifradas con scrypt y las sesiones se gestionan desde la colección `sessions`.
 
+## Despliegue público en Render
+
+El archivo `render.yaml` configura un servicio web de Render para compilar el frontend y servirlo junto con la API Express. Antes de desplegar:
+
+1. Crea una base de datos en MongoDB Atlas y copia su URI de conexión.
+2. En Render, crea un Blueprint desde este repositorio y confirma la carpeta raíz `Proyecto final`.
+3. Ingresa `MONGODB_URI`, `ADMIN_USERNAME`, `ADMIN_PASSWORD` y `ADMIN_TOKEN` como variables secretas del servicio. Usa credenciales seguras y no las guardes en GitHub.
+4. Render compilará con `npm install && npm run build` e iniciará el servicio con `npm start`.
+
+Render asigna el puerto del servicio automáticamente. La API escucha en todas las interfaces y el panel administrativo no acepta las credenciales de desarrollo cuando `NODE_ENV=production`.
+
 ## Producción local
 
 ```sh
@@ -46,7 +57,6 @@ Express sirve el build y la API desde el puerto `3001` (o desde el puerto config
   - `backend/src/routes/`: endpoints de pedidos, contactos y administración.
   - `backend/src/database/connection.js`: conexión con MongoDB.
   - `backend/src/database/models/`: esquemas de pedidos, contactos, usuarios y sesiones.
-  - `backend/src/database/models/`: esquemas de pedidos y contactos.
 - `shared/catalog.js`: catálogo y precios usados tanto por el frontend como por el backend.
 - `dist/`: archivos generados por `npm run build`; no se editan manualmente.
 

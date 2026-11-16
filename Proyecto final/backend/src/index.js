@@ -63,8 +63,8 @@ app.use((error, _request, response, _next) => {
   return response.status(500).json({ error: "Ocurrió un error interno. Inténtalo más tarde." });
 });
 
-app.listen(port, "127.0.0.1", () => {
-  console.log(`API Futrix escuchando en http://127.0.0.1:${port}`);
+app.listen(port, "0.0.0.0", () => {
+  console.log(`API Futrix escuchando en el puerto ${port}`);
   connectToDatabase()
     .then(() => console.log(`Conectado a MongoDB: ${mongoose.connection.name}`))
     .catch((error) => console.error(error.message));
