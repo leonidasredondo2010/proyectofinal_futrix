@@ -50,6 +50,7 @@ function App() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [cartStatus, setCartStatus] = useState("");
   const [contactStatus, setContactStatus] = useState("");
+  const [isContactSubmitting, setIsContactSubmitting] = useState(false);
   const [cartWhatsAppLink, setCartWhatsAppLink] = useState("");
   const [contactWhatsAppLink, setContactWhatsAppLink] = useState("");
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -173,6 +174,7 @@ function App() {
 
   async function submitContact(event) {
     event.preventDefault();
+    if (isContactSubmitting) return;
     const data = new FormData(event.currentTarget);
     const contact = {
       name: data.get("nombre"),
@@ -190,6 +192,7 @@ function App() {
     ].filter(Boolean).join("\n");
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     const whatsappWindow = window.open("", "_blank");
+    setIsContactSubmitting(true);
     setContactStatus("Guardando tu mensaje...");
     setContactWhatsAppLink("");
     try {
@@ -198,6 +201,8 @@ function App() {
       whatsappWindow?.close();
       setContactStatus(error.message);
       return;
+    } finally {
+      setIsContactSubmitting(false);
     }
 
     setContactStatus("Mensaje guardado. Puedes revisar el mensaje de WhatsApp y confirmar el envío.");
@@ -363,28 +368,30 @@ function App() {
               <form className="formulario-contacto" onSubmit={submitContact}>
                 <label>
                   Nombre completo
-                  <input type="text" name="nombre" autoComplete="name" minLength="2" maxLength="100" required />
+                  <input type="text" name="nombre" autoComplete="name" minLength="2" maxLength="100" required disabled={isContactSubmitting} />
                 </label>
                 <label>
                   Tu WhatsApp
-                  <input type="tel" name="telefono" autoComplete="tel" minLength="7" maxLength="20" required />
+                  <input type="tel" name="telefono" autoComplete="tel" minLength="7" maxLength="20" required disabled={isContactSubmitting} />
                 </label>
                 <label>
                   Correo electrónico
-                  <input type="email" name="correo" autoComplete="email" maxLength="254" required />
+                  <input type="email" name="correo" autoComplete="email" maxLength="254" required disabled={isContactSubmitting} />
                 </label>
                 <label>
                   Talla que te interesa
-                  <select name="talla" defaultValue="" required>
+                  <select name="talla" defaultValue="" required disabled={isContactSubmitting}>
                     <option value="" disabled>Selecciona una talla</option>
                     {availableSizes.map((size) => <option value={size} key={size}>Talla {size}</option>)}
                   </select>
                 </label>
                 <label className="campo-mensaje">
                   ¿En qué podemos ayudarte?
-                  <textarea name="mensaje" rows="4" minLength="2" maxLength="2000" required />
+                  <textarea name="mensaje" rows="4" minLength="2" maxLength="2000" required disabled={isContactSubmitting} />
                 </label>
-                <button className="boton" type="submit">Abrir WhatsApp para enviar</button>
+                <button className="boton" type="submit" disabled={isContactSubmitting}>
+                  {isContactSubmitting ? "Guardando..." : "Abrir WhatsApp para enviar"}
+                </button>
                 <p className="aviso-contacto">WhatsApp abrirá un mensaje con tus datos; tendrás que confirmar el envío.</p>
                 {contactStatus && <p className="estado-formulario" role="status">{contactStatus}</p>}
                 {contactWhatsAppLink && (
