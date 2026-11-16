@@ -363,15 +363,15 @@ function App() {
               <form className="formulario-contacto" onSubmit={submitContact}>
                 <label>
                   Nombre completo
-                  <input type="text" name="nombre" autoComplete="name" required />
+                  <input type="text" name="nombre" autoComplete="name" minLength="2" maxLength="100" required />
                 </label>
                 <label>
                   Tu WhatsApp
-                  <input type="tel" name="telefono" autoComplete="tel" required />
+                  <input type="tel" name="telefono" autoComplete="tel" minLength="7" maxLength="20" required />
                 </label>
                 <label>
                   Correo electrónico
-                  <input type="email" name="correo" autoComplete="email" required />
+                  <input type="email" name="correo" autoComplete="email" maxLength="254" required />
                 </label>
                 <label>
                   Talla que te interesa
@@ -382,7 +382,7 @@ function App() {
                 </label>
                 <label className="campo-mensaje">
                   ¿En qué podemos ayudarte?
-                  <textarea name="mensaje" rows="4" required />
+                  <textarea name="mensaje" rows="4" minLength="2" maxLength="2000" required />
                 </label>
                 <button className="boton" type="submit">Abrir WhatsApp para enviar</button>
                 <p className="aviso-contacto">WhatsApp abrirá un mensaje con tus datos; tendrás que confirmar el envío.</p>
