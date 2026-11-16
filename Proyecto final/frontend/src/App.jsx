@@ -113,10 +113,14 @@ function App() {
     if (quantity > 0) nextCart[productId] = quantity;
     else delete nextCart[productId];
     updateCart(nextCart);
+    setCartStatus("");
+    setCartWhatsAppLink("");
   }
 
   function clearCart() {
     updateCart({});
+    setCartStatus("");
+    setCartWhatsAppLink("");
   }
 
   async function orderOnWhatsApp(customer) {
