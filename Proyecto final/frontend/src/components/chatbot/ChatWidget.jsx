@@ -52,7 +52,7 @@ function getReply(question) {
     text: "Tenemos tallas 5, 6, 7 y 8. Para elegir, mide alrededor de la palma justo debajo de los nudillos, sin incluir el pulgar; consulta también la guía del fabricante, porque las medidas pueden variar según el modelo. El guante debe quedar firme y permitir mover los dedos con comodidad.",
     link: size
       ? sizeLink
-      : { href: sitePath("#guia"), label: "Consultar guía de tallas" },
+      : { href: sitePath(), label: "Consultar guía de tallas", section: "guia" },
   });
   add(/\b(cuidar|cuidado|limpiar|limpieza|lavar|secar|guardar|conservar)\b/.test(text), {
     text: "Para cuidar tus guantes, sigue las indicaciones de limpieza del fabricante, déjalos secar al aire sin calor directo ni sol intenso y guárdalos secos en un lugar limpio y ventilado.",
@@ -83,7 +83,7 @@ function getReply(question) {
   };
 }
 
-export default function ChatWidget() {
+export default function ChatWidget({ onNavigateToSection }) {
   const [isOpen, setIsOpen] = useState(false);
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([initialGreeting]);
@@ -130,7 +130,13 @@ export default function ChatWidget() {
                 {message.link && (
                   <>
                     <br />
-                    <a href={message.link.href} {...(message.link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+                    <a
+                      href={message.link.href}
+                      onClick={message.link.section
+                        ? (event) => onNavigateToSection(message.link.section, event)
+                        : undefined}
+                      {...(message.link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    >
                       {message.link.label}
                     </a>
                   </>

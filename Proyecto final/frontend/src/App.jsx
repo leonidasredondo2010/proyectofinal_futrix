@@ -14,7 +14,11 @@ const whatsappNumber = "573002221220";
 const queryParams = new URLSearchParams(window.location.search);
 const requestedSize = queryParams.get("talla");
 const showAdminPanel = queryParams.get("admin") === "1";
-const initialSelectedSize = availableSizes.includes(requestedSize) ? requestedSize : null;
+const initialSectionToScroll = window.location.hash === "#guia" ? "guia" : null;
+const initialSelectedSize = initialSectionToScroll
+  || !availableSizes.includes(requestedSize)
+  ? null
+  : requestedSize;
 
 function IconoBalon() {
   return (
@@ -47,7 +51,7 @@ function App() {
   const [cart, setCart] = useState(readSavedCart);
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedSize, setSelectedSize] = useState(initialSelectedSize);
-  const [sectionToScroll, setSectionToScroll] = useState(null);
+  const [sectionToScroll, setSectionToScroll] = useState(initialSectionToScroll);
   const [selectedImage, setSelectedImage] = useState(null);
   const [cartStatus, setCartStatus] = useState("");
   const [contactStatus, setContactStatus] = useState("");
@@ -66,7 +70,25 @@ function App() {
   }, [selectedSize, sectionToScroll]);
 
   useEffect(() => {
+    if (window.location.hash !== "#guia") return;
+    const url = new URL(window.location.href);
+    url.hash = "";
+    url.searchParams.delete("talla");
+    window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+  }, []);
+
+  useEffect(() => {
     function handlePopState() {
+      if (window.location.hash === "#guia") {
+        const url = new URL(window.location.href);
+        url.hash = "";
+        url.searchParams.delete("talla");
+        window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+        setSelectedSize(null);
+        setSectionToScroll("guia");
+        return;
+      }
+
       const params = new URLSearchParams(window.location.search);
       const size = params.get("talla");
       setSelectedSize(availableSizes.includes(size) ? size : null);
@@ -76,6 +98,22 @@ function App() {
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
+
+  function navigateToSection(sectionId, event) {
+    event.preventDefault();
+    const url = new URL(window.location.href);
+    url.hash = "";
+    url.searchParams.delete("talla");
+    window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+
+    if (selectedSize) {
+      setSectionToScroll(sectionId);
+      setSelectedSize(null);
+      return;
+    }
+
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   function returnToSizes() {
     window.history.pushState(null, "", sitePath("#tallas"));
@@ -223,7 +261,7 @@ function App() {
         <nav aria-label="Navegación principal">
           <a href={sitePath("#inicio")}>Inicio</a>
           <a href={sitePath("#tallas")}>Tallas</a>
-          <a href={sitePath("#guia")}>Guía de tallas</a>
+          <a href={sitePath()} onClick={(event) => navigateToSection("guia", event)}>Guía de tallas</a>
           <a href={sitePath("#cuidados")}>Cuidados</a>
           <a href={sitePath("#preguntas")}>Preguntas frecuentes</a>
           <a href={sitePath("#nosotros")}>Sobre Futrix</a>
@@ -420,7 +458,7 @@ function App() {
             </div>
             <nav className="pie-enlaces" aria-label="Enlaces del pie de página y redes sociales">
               <a href={sitePath("#tallas")}>Ver tallas</a>
-              <a href={sitePath("#guia")}>Guía de tallas</a>
+              <a href={sitePath()} onClick={(event) => navigateToSection("guia", event)}>Guía de tallas</a>
               <a href={sitePath("#cuidados")}>Cuidados</a>
               <a href={sitePath("#preguntas")}>Preguntas frecuentes</a>
               <a href={sitePath("#nosotros")}>Sobre Futrix</a>
@@ -453,7 +491,7 @@ function App() {
         customer={currentUser}
         onRequireLogin={() => setIsAccountDialogOpen(true)}
       />
-      <ChatWidget />
+      <ChatWidget onNavigateToSection={navigateToSection} />
       <ImageViewer product={selectedImage} onClose={() => setSelectedImage(null)} />
     </div>
   );
